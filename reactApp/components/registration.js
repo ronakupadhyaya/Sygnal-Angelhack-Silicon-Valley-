@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { Card, CardActions, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
+import ActionFavorite from 'material-ui/svg-icons/action/favorite';
+import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 
 // or change it to axios request
 
@@ -12,7 +15,9 @@ class Registration extends React.Component {
     super(props);
     this.state  = {
       username: '',
-      password: ''
+      password: '',
+      isSeller: false,
+      registerSuccess: false
     };
     this.handleUser = this.handleUser.bind(this);
     this.handlePass = this.handlePass.bind(this);
@@ -29,13 +34,20 @@ class Registration extends React.Component {
 
   handleSubmit() {
     var self = this;
-    axios.post('https://sygnalapp.mybluemix.net/register', {
+    console.log("OUR STATE BABY", this.state);
+    axios.post('https://sygnalapp.mybluemix.net/api/UserObjs/replaceOrCreate', {
       username: this.state.username,
-      password: this.state.password
+      password: this.state.password,
+      isSeller: this.state.isSeller
     })
-    .then(function({ data }) {
-      if(data.success) {
-        self.props.history.push('/');
+    .then(function( res ) {
+      console.log("RESPONSE", res);
+      if(res.data) {
+        // this.setState({
+        //   registerSuccess: true
+        // })
+        console.log('supposed to redirect');
+        self.props.history.push('/userview');
       }
     })
     .catch(function(err) {
@@ -46,10 +58,11 @@ class Registration extends React.Component {
   render() {
     return(
       <div className="loginContainer">
+        {/* {this.state.registerSuccess ? <Redirect to='/userview' /> : ''} */}
         <Card className="card">
           <CardMedia
             className="icon"
-            mediaStyle={{width: "200px", height: "200px"}}
+            mediaStyle={{width: "150px", height: "150px"}}
           >
             <img src='img/signal_logo.jpg' />
           </CardMedia>
@@ -71,6 +84,13 @@ class Registration extends React.Component {
               onChange={(event) => this.handlePass(event)}
             />
             <br></br>
+            <Checkbox
+              checkedIcon={<ActionFavorite />}
+              uncheckedIcon={<ActionFavoriteBorder />}
+              label="Become a WiFi-seller"
+              style={{marginBottom: '10px', marginTop: '20px'}}
+              onCheck={() => this.setState({ isSeller: true })}
+            />
           </CardText>
           <CardActions>
             <RaisedButton

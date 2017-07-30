@@ -62,7 +62,7 @@ app.post('/register', function(req, res) {
   });
 });
 
-app.post('/login', passport.authenticate('local', { failureRedirect: '/failed' }),function(req, res) {
+app.post('/login', passport.authenticate('local', { failureRedirect: '/failed' }), function(req, res) {
   res.json({success: true});
 });
 

@@ -28,22 +28,22 @@ class Login extends React.Component {
     this.setState({password: e.target.value});
   }
 
-  // handleSubmit() {
-  //   var self = this;
-  //   axios.post('https://localhost:3000/login', {
-  //     username: this.state.username,
-  //     password: this.state.password
-  //   })
-  //   .then(function({ data }) {
-  //     console.log('This log should contain the data', data);
-  //     if(data.success) {
-  //       console.log('The user should be taken to maps page');
-  //       self.props.history.push('/userview');
-  //     } else {
-  //       self.setState({status: 'There was a problem with logging in!'});
-  //     }
-  //   });
-  // }
+  handleSubmit() {
+    var self = this;
+    axios.post('https://localhost:3000/login', {
+      username: this.state.username,
+      password: this.state.password
+    })
+    .then(function({ data }) {
+      console.log('This log should contain the data', data);
+      if(data.success) {
+        console.log('The user should be taken to maps page');
+        self.props.history.push('/userview');
+      } else {
+        self.setState({status: 'There was a problem with logging in!'});
+      }
+    });
+  }
 
   render() {
     return(
@@ -51,7 +51,7 @@ class Login extends React.Component {
         <Card className="card">
           <CardMedia
             className="icon"
-            mediaStyle={{width: "200px", height: "200px"}}
+            mediaStyle={{width: "150px", height: "150px"}}
           >
             <img src='img/signal_logo.jpg' />
           </CardMedia>

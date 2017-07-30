@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import * as colors from 'material-ui/styles/colors';
 import { List, ListItem } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
@@ -21,9 +20,9 @@ import { Card, CardActions, CardMedia, CardTitle, CardText } from 'material-ui/C
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
+import AppBar from 'material-ui/AppBar';
+import Subheader from 'material-ui/Subheader';
 
-// const sellerIcon = <FontIcon className="material-icons">settings_input_antenna</FontIcon>;
-// const buyerIcon = <FontIcon className="material-icons">explore</FontIcon>;
 
 class UserView extends React.Component {
   constructor(props) {
@@ -108,23 +107,39 @@ class UserView extends React.Component {
 
     return(
       <div className="userview">
-        <RaisedButton
+        <AppBar
+          title="Sygnal"
+          onLeftIconButtonTouchTap={() => this.handleToggle()}
+          style={{width: '80%'}}
+        />
+        {/* <RaisedButton
           label="Open Drawer"
           onTouchTap={() => this.handleToggle()}
-        />
+        /> */}
         <Drawer
           docked={false}
           width={200}
           open={this.state.open}
           onRequestChange={(open) => this.setState({open})}
         >
-          <MenuItem onTouchTap={() => this.handleClose()}>Menu Item</MenuItem>
-          <MenuItem onTouchTap={() => this.handleClose()}>Menu Item 2</MenuItem>
+          <List>
+            <Subheader>Placeholder for username</Subheader>
+            <ListItem
+              primaryText="Profile"
+              leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>}
+              onTouchTap={() => this.handleClose()}
+            />
+            <ListItem
+              primaryText="Settings"
+              leftIcon={<FontIcon className="material-icons">settings</FontIcon>}
+              onTouchTap={() => this.handleClose()}
+            />
+          </List>
         </Drawer>
         <Card className="card">
           <CardMedia
             className="icon"
-            mediaStyle={{width: "200px", height: "200px"}}
+            mediaStyle={{width: "150px", height: "150px"}}
           >
             <img src='img/signal_logo.jpg' />
           </CardMedia>
