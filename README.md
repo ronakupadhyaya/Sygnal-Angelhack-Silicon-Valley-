@@ -1,6 +1,6 @@
-# The WiFi sharing app you hope to have
+# Sygnal - For all your connective needs
 
-The application is a
+WiFi problems, we've all had them, and sometimes they come at the worst time like when you're looking for a coffee shop to finish up that essay or send that urgent email. With Sygnal, users can be connected to the internet practically anywhere for a small price. Moreover, users can also sell their unused data on their internet plan to other Sygnal users.
 
 ## Built With
 
