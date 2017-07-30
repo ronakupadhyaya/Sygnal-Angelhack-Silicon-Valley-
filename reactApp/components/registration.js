@@ -47,7 +47,10 @@ class Registration extends React.Component {
         //   registerSuccess: true
         // })
         console.log('supposed to redirect');
-        self.props.history.push('/userview');
+        self.props.history.push({
+          pathname: '/userview',
+          state: { name: res.data.username }
+        });
       }
     })
     .catch(function(err) {

@@ -4,8 +4,13 @@ The application is a
 
 ## Built With
 
-* React
-* Node
+* ReactJS
+* NodeJS
+* Loopback.io
+* IBM Bluemix
+* Google Maps Geolocation API
+* Node-Wifi
+
 
 ## Authors
 

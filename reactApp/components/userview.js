@@ -22,6 +22,8 @@ import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import AppBar from 'material-ui/AppBar';
 import Subheader from 'material-ui/Subheader';
+import BuyerView from './buyerview.js';
+import SellerView from './sellerview.js';
 
 
 class UserView extends React.Component {
@@ -76,30 +78,6 @@ class UserView extends React.Component {
   }
 
   render() {
-    const styles = {
-      block: {
-        maxWidth: 250,
-      },
-      toggle: {
-        marginBottom: 16,
-      },
-      thumbOff: {
-        backgroundColor: '#ffcccc',
-      },
-      trackOff: {
-        backgroundColor: '#ff9d9d',
-      },
-      thumbSwitched: {
-        backgroundColor: 'red',
-      },
-      trackSwitched: {
-        backgroundColor: '#ff9d9d',
-      },
-      labelStyle: {
-        color: 'red',
-      },
-    };
-
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px'};
     const sellerIcon = <FontIcon className="material-icons">settings_input_antenna</FontIcon>;
@@ -123,7 +101,7 @@ class UserView extends React.Component {
           onRequestChange={(open) => this.setState({open})}
         >
           <List>
-            <Subheader>Placeholder for username</Subheader>
+            <Subheader>{this.props.location.state.name}</Subheader>
             <ListItem
               primaryText="Profile"
               leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>}
@@ -136,7 +114,9 @@ class UserView extends React.Component {
             />
           </List>
         </Drawer>
-        <Card className="card">
+
+
+        {/* <Card className="card">
           <CardMedia
             className="icon"
             mediaStyle={{width: "150px", height: "150px"}}
@@ -195,18 +175,25 @@ class UserView extends React.Component {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
+        {this.state.selectedIndex===0 ? <SellerView style={{width: '80%'}}/> : <BuyerView style={{width: '80%'}}/>}
+
         <Paper style={{width: '80%'}} zDepth={1}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             <BottomNavigationItem
               label="As Seller"
               icon={sellerIcon}
-              onTouchTap={() => this.select(0)}
+              onTouchTap={() => {
+                this.select(0);
+
+              }}
             />
             <BottomNavigationItem
               label="As Buyer"
               icon={buyerIcon}
-              onTouchTap={() => this.select(1)}
+              onTouchTap={() => {
+                this.select(1);
+              }}
             />
           </BottomNavigation>
         </Paper>

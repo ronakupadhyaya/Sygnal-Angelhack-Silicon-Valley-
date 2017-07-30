@@ -1,11 +1,8 @@
 import React from 'react';
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 
-class MapContainer extends React.Component {
-
- componentWillMount(){
-
- }
+class MapView extends React.Component {
+  
  render() {
     const google = window.google;
     return (
@@ -47,4 +44,4 @@ class MapContainer extends React.Component {
 
 export default GoogleApiWrapper({
   apiKey: (process.env.GOOGLE_MAP_API)
-})(MapContainer)
+})(MapView)
