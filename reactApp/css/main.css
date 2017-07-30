@@ -25,6 +25,18 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   background-color: #dee8f9;
+}
+
+.buyerview {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sellerview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

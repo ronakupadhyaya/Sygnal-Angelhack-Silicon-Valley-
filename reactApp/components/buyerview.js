@@ -47,64 +47,66 @@ class BuyerView extends React.Component {
   }
 
   render() {
-    const {finished, stepIndex} = this.state;
+    const {tutorial, finished, stepIndex} = this.state;
 
     return(
       <div className="buyerview">
-        {/* <MapView /> */}
-        {this.state.tutorial ?
-          <div style={{width: '100%', maxWidth: '1000px', margin: 'auto'}}>
-            <Stepper activeStep={stepIndex}>
-              <Step>
-                <StepLabel>Tap</StepLabel>
-              </Step>
-              <Step>
-                <StepLabel>Draw</StepLabel>
-              </Step>
-              <Step>
-                <StepLabel>Select time</StepLabel>
-              </Step>
-            </Stepper>
-            <div style={{margin: '0 16px'}}>
-              {finished ? (
-                <div>
+        <MapView />
+        <br></br>
+        <div style={{width: '100%', marginTop: '380px'}}>
+        {tutorial ?
+        <div /*style={{width: '100%', marginTop: '380px'}} */ >
+          <Stepper activeStep={stepIndex} style={{backgroundColor: '#eaeff7'}} >
+            <Step>
+              <StepLabel>Tap</StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>Draw</StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>Select time</StepLabel>
+            </Step>
+          </Stepper>
+          <div style={{marginRight: '16px', marginLeft: '16px', marginBottom: '20px', textAlign: 'center'}}>
+            {finished ? (
+              <div>
+                <FlatButton
+                  label='Restart tutorial'
+                  onTouchTap={(event) => {
+                    event.preventDefault();
+                    this.setState({stepIndex: 0, finished: false});
+                  }}
+                />
+                <FlatButton
+                  label='Hide tutorial'
+                  onTouchTap={(event) => {
+                    event.preventDefault();
+                    this.setState({tutorial: false});
+                  }}
+                />
+              </div>
+            ) : (
+              <div>
+                <p>{this.getStepContent(stepIndex)}</p>
+                <div style={{marginTop: '12px', marginBottom: '20px'}}>
                   <FlatButton
-                    label='Restart tutorial'
-                    onTouchTap={(event) => {
-                      event.preventDefault();
-                      this.setState({stepIndex: 0, finished: false});
-                    }}
+                    label="Back"
+                    disabled={stepIndex === 0}
+                    onTouchTap={() => this.handlePrev()}
+                    style={{marginRight: 12}}
                   />
-                  <FlatButton
-                    label='Hide tutorial'
-                    onTouchTap={(event) => {
-                      event.preventDefault();
-                      this.setState({tutorial: false});
-                    }}
+                  <RaisedButton
+                    label={stepIndex === 2 ? 'Finish' : 'Next'}
+                    primary={true}
+                    onTouchTap={() => this.handleNext()}
                   />
                 </div>
-              ) : (
-                <div>
-                  <p>{this.getStepContent(stepIndex)}</p>
-                  <div style={{marginTop: 12, marginBottom: 20}}>
-                    <FlatButton
-                      label="Back"
-                      disabled={stepIndex === 0}
-                      onTouchTap={() => this.handlePrev()}
-                      style={{marginRight: 12}}
-                    />
-                    <RaisedButton
-                      label={stepIndex === 2 ? 'Finish' : 'Next'}
-                      primary={true}
-                      onTouchTap={() => this.handleNext()}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div> : ''
+              </div>
+            )}
+          </div>
+        </div> : ''
         }
-
+      </div>
       </div>
     );
   }

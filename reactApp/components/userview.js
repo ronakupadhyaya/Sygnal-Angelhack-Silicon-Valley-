@@ -84,16 +84,14 @@ class UserView extends React.Component {
     const buyerIcon = <FontIcon className="material-icons">explore</FontIcon>;
 
     return(
+      <div>
       <div className="userview">
         <AppBar
+          className = "appbarrs"
           title="Sygnal"
           onLeftIconButtonTouchTap={() => this.handleToggle()}
-          style={{width: '80%'}}
+          style={{width: '100%'}}
         />
-        {/* <RaisedButton
-          label="Open Drawer"
-          onTouchTap={() => this.handleToggle()}
-        /> */}
         <Drawer
           docked={false}
           width={200}
@@ -112,73 +110,22 @@ class UserView extends React.Component {
               leftIcon={<FontIcon className="material-icons">settings</FontIcon>}
               onTouchTap={() => this.handleClose()}
             />
+            <ListItem
+              primaryText="Help"
+              leftIcon={<FontIcon className="material-icons">info_outline</FontIcon>}
+              onTouchTap={() => this.handleClose()}
+            />
           </List>
         </Drawer>
 
+        {this.state.selectedIndex===0 ?
+        <SellerView /* style={{width: '80%'}} */ /> :
+        <BuyerView
+          className = "buyerview"
+          // style={{width: '150%'}}
+        /> }
 
-        {/* <Card className="card">
-          <CardMedia
-            className="icon"
-            mediaStyle={{width: "150px", height: "150px"}}
-          >
-            <img src='img/signal_logo.jpg' />
-          </CardMedia>
-          <CardTitle titleStyle={{textAlign: 'center'}} title="Sygnal" subtitle="The WiFi sharing App you wish you had"/>
-          <CardText>
-
-          </CardText>
-          <CardActions>
-
-          </CardActions>
-        </Card>
-        <div style={{width: '100%', maxWidth: 1000, margin: 'auto'}}>
-          <Stepper activeStep={stepIndex}>
-            <Step>
-              <StepLabel>Tap</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Draw</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Select time</StepLabel>
-            </Step>
-          </Stepper>
-          <div style={contentStyle}>
-            {finished ? (
-              <p>
-                <a
-                  href="#"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    this.setState({stepIndex: 0, finished: false});
-                  }}
-                >
-                  Click here
-                </a> to reset.
-              </p>
-            ) : (
-              <div>
-                <p>{this.getStepContent(stepIndex)}</p>
-                <div style={{marginTop: 12, marginBottom: 20}}>
-                  <FlatButton
-                    label="Back"
-                    disabled={stepIndex === 0}
-                    onTouchTap={() => this.handlePrev()}
-                    style={{marginRight: 12}}
-                  />
-                  <RaisedButton
-                    label={stepIndex === 2 ? 'Finish' : 'Next'}
-                    primary={true}
-                    onTouchTap={() => this.handleNext()}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </div> */}
-        {this.state.selectedIndex===0 ? <SellerView style={{width: '80%'}}/> : <BuyerView style={{width: '80%'}}/>}
-
-        <Paper style={{width: '80%'}} zDepth={1}>
+        <Paper style={{width: '100%'}} zDepth={1}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             <BottomNavigationItem
               label="As Seller"
@@ -197,7 +144,9 @@ class UserView extends React.Component {
             />
           </BottomNavigation>
         </Paper>
+        <small style={{alignSelf: 'center', marginTop: '20px', marginBottom: '20px'}}>2017 Sygnal.Inc</small>
       </div>
+    </div>
     );
   }
 }
