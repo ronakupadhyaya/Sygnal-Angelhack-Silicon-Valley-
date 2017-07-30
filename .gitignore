@@ -1,0 +1,6 @@
+node_modules
+build/*
+!build/img/*
+!build/index.*
+env.sh
+npm-debug.log
