@@ -51,9 +51,10 @@ class BuyerView extends React.Component {
 
     return(
       <div className="buyerview">
-        <MapView />
-        <br></br>
-        <div style={{width: '100%', marginTop: '380px'}}>
+        <div style={{width:"60%", height: "30%", margin: '30px'}}>
+          <MapView />
+        </div>
+        <div style={{width: '100%', marginTop: '600px'}}>
         {tutorial ?
         <div /*style={{width: '100%', marginTop: '380px'}} */ >
           <Stepper activeStep={stepIndex} style={{backgroundColor: '#eaeff7'}} >

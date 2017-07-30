@@ -62,6 +62,7 @@ class SellerView extends React.Component {
       {
         id: 0,
         title: 'Your Wifi Analytics',
+        img: 'img/seller_dash_board.png',
         featured: true,
       }, {
         id: 1,
@@ -106,6 +107,7 @@ class SellerView extends React.Component {
                 rows={tile.featured ? 2 : 1}
               >
                 {/* <img src='img/placeholder.jpg' /> */}
+                {tile.img ? <img src={tile.img} style={{maxWidth: '100%', maxHeight: '100%', marginTop: '20px'}} /> : ''}
                 {tile.element ? tile.element : ''}
               </GridTile>
             ))}
