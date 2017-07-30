@@ -7,14 +7,13 @@ import { Switch, Route } from 'react-router-dom';
 
 class Routes extends React.Component {
   componentDidMount() {
-    console.log('ROUTES MOUNTED BOIZ');  
+    console.log('ROUTES MOUNTED BOIZ');
   }
   render() {
     return (
       <Switch>
-        <Route exact path ="/" component={Login} />
+        <Route exact path="/" component={Login} />
         <Route exact path="/registration" component={Registration} />
-        {/* <Route path="/documents/:docID" render={(props) => <Document socket={socket} {...props}/>} /> */}
         <Route exact path="/userview" component={UserView} />
       </Switch>
     );

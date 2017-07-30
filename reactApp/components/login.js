@@ -16,7 +16,7 @@ class Login extends React.Component {
 
     this.handleUser = this.handleUser.bind(this);
     this.handlePass = this.handlePass.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
 
   }
 
@@ -28,34 +28,34 @@ class Login extends React.Component {
     this.setState({password: e.target.value});
   }
 
-  handleSubmit() {
-    // e.preventDefault();
-    var self = this;
-    axios.post('https://sygnalapp.mybluemix.net/login', {
-      username: this.state.username,
-      password: this.state.password
-    })
-    .then(function({ data }) {
-      console.log('This log should contain the data', data);
-      if(data.success) {
-        console.log('The user should be taken to maps page');
-        self.props.history.push('/map');
-      } else {
-        self.setState({status: 'There was a problem with logging in!'});
-      }
-    });
-  }
+  // handleSubmit() {
+  //   var self = this;
+  //   axios.post('https://localhost:3000/login', {
+  //     username: this.state.username,
+  //     password: this.state.password
+  //   })
+  //   .then(function({ data }) {
+  //     console.log('This log should contain the data', data);
+  //     if(data.success) {
+  //       console.log('The user should be taken to maps page');
+  //       self.props.history.push('/userview');
+  //     } else {
+  //       self.setState({status: 'There was a problem with logging in!'});
+  //     }
+  //   });
+  // }
 
   render() {
     return(
-
-      <Card className="card">
+      <div className="loginContainer">
+        <Card className="card">
           <CardMedia
-            // overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
+            className="icon"
+            mediaStyle={{width: "200px", height: "200px"}}
           >
             <img src='img/signal_logo.jpg' />
           </CardMedia>
-          <CardTitle title="Login with us" subtitle="the WiFi sharing App that you need"/>
+          <CardTitle titleStyle={{textAlign: 'center'}} title="Sygnal" subtitle="The WiFi sharing App you wish you had"/>
           <CardText>
             <p style={{color: 'red'}}>{this.state.status}</p>
             <TextField
@@ -77,17 +77,19 @@ class Login extends React.Component {
           </CardText>
           <CardActions>
             <RaisedButton
-              label="To Registration"
+              label="New user"
               containerElement={<Link to='/registration'></Link>}
             />
             <RaisedButton
               label="Login"
               primary={true}
-              onTouchTap={() => this.handleSubmit()}
+              containerElement={<Link to='/userview'></Link>}
+              // onTouchTap={() => this.handleSubmit()}
             />
           </CardActions>
         </Card>
-
+        <small style={{alignSelf: 'center', marginBottom: '20px'}}>2017 Sygnal.Inc</small>
+      </div>
     );
   }
 

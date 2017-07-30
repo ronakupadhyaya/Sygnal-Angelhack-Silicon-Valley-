@@ -45,12 +45,15 @@ class Registration extends React.Component {
 
   render() {
     return(
-      <Card className="card">
+      <div className="loginContainer">
+        <Card className="card">
           <CardMedia
-            // overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
+            className="icon"
+            mediaStyle={{width: "200px", height: "200px"}}
           >
+            <img src='img/signal_logo.jpg' />
           </CardMedia>
-          <CardTitle title="Register with us" subtitle="the document management tool that you deserve" />
+          <CardTitle titleStyle={{textAlign: 'center'}} title="Sygnal" subtitle="The WiFi sharing App you wish you had" />
           <CardText>
             <TextField
               floatingLabelText="Username"
@@ -81,6 +84,8 @@ class Registration extends React.Component {
             />
           </CardActions>
         </Card>
+        <small style={{alignSelf: 'center', marginBottom: '20px'}}>2017 Sygnal.Inc</small>
+      </div>
     );
   }
 

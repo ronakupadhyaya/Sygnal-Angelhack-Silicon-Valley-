@@ -3,257 +3,201 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import * as colors from 'material-ui/styles/colors';
 import { List, ListItem } from 'material-ui/List';
-import { convertToRaw, ContentState } from 'draft-js';
-import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
-import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import Dialog from 'material-ui/Dialog';
-console.log('Chilling');
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import {
+  Step,
+  Stepper,
+  StepLabel,
+} from 'material-ui/Stepper';
+import { Card, CardActions, CardMedia, CardTitle, CardText } from 'material-ui/Card';
+import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+import Paper from 'material-ui/Paper';
+import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 
-export default class UserView extends React.Component {
+// const sellerIcon = <FontIcon className="material-icons">settings_input_antenna</FontIcon>;
+// const buyerIcon = <FontIcon className="material-icons">explore</FontIcon>;
+
+class UserView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      myDocs: [],
-      docID: '',
-      docPass: '',
-      sharedDocID: '',
-      docCreateModal: false,
-      docShareModal: false
+      open: false,
+      finished: false,
+      stepIndex: 0,
+      selectedIndex: 0,
     };
   }
 
-  handleNewDocChange(event) {
+  select(index) {
+    this.setState({selectedIndex: index});
+  }
+
+  handleToggle() {
+    this.setState({open: !this.state.open});
+  }
+
+  handleClose() {
+    this.setState({open: false});
+  }
+
+  handleNext() {
+    const {stepIndex} = this.state;
     this.setState({
-      docID: event.target.value
+      stepIndex: stepIndex + 1,
+      finished: stepIndex >= 2,
     });
-  }
+  };
 
-  handleNewDocPassChange(event) {
-    this.setState({
-      docPass: event.target.value
-    });
-  }
+  handlePrev() {
+    const {stepIndex} = this.state;
+    if (stepIndex > 0) {
+      this.setState({stepIndex: stepIndex - 1});
+    }
+  };
 
-  handleNewDocSubmit() {
-    //update with material modal
-    var self = this;
-    var title = this.state.docID;
-    var password = this.state.docPass;
-    axios.post('https://desolate-depths-35755.herokuapp.com/newdoc', {
-      title: title,
-      password: password,
-      editorState: JSON.stringify(convertToRaw(ContentState.createFromText('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')))
-    })
-      .then(function({ data }){
-        if(data.success) {
-          //add new doc to mydocs
-          var newMyDocs = self.state.myDocs.concat(data.document);
-          self.setState({
-            myDocs: newMyDocs
-          });
-          self.props.history.push(`/documents/${data.document._id}`);
-        }else{
-          console.log('failure making doc. redirect back to doc portal');
-        }
-      });
-
-    self.setState({
-      docID: '',
-      docPass: ''
-    });
-
-  }
-
-  handleSharedDocChange(event) {
-    this.setState({
-      sharedDocID: event.target.value
-    });
-  }
-
-  handleSharedDocSubmit() {
-    //update with material modal
-    var self = this;
-    var sharedDocID = this.state.sharedDocID;
-    var password = this.state.docPass;
-    // post to route in Backend
-    axios.post('https://desolate-depths-35755.herokuapp.com/search-shared', {
-      docID: sharedDocID,
-      password: password
-    })
-      .then( function({ data }) {
-        // process response and either stay on doc portal with the proper alert or redirect to populated document page
-        if(data.success){
-          self.props.history.push(`/documents/${sharedDocID}`);
-        } else {
-          self.setState({docShareModal: false});
-        }
-      });
-  }
-
-  onDeleteClick(docID) {
-    var self = this;
-    console.log('TRYING TO DELETE');
-    // var docID = e.target.value;
-    axios.post('https://desolate-depths-35755.herokuapp.com/deletedoc', {docID: docID})
-    .then( function({data}) {
-      if(data.sucess){
-
-        var newMyDocs = self.state.myDocs.slice();
-        newMyDocs = newMyDocs.filter(doc => doc._id !== docID );
-        console.log('hereboihereboi', newMyDocs);
-        self.setState({
-          myDocs: newMyDocs
-        });
-
-      }
-    });
-  }
-
-  componentWillMount() {
-    //load all the documents into the state of this component under myDocs
-    var self = this;
-
-    axios.get('https://desolate-depths-35755.herokuapp.com/getdocs')
-    .then(function({ data }){
-      if(data.success) {
-        self.setState({
-          myDocs: data.found_docs
-        });
-      }
-    });
+  getStepContent(stepIndex) {
+    switch (stepIndex) {
+      case 0:
+        return 'Tap button to draw';
+      case 1:
+        return 'Draw region to get WiFi from';
+      case 2:
+        return 'Select buying period';
+      default:
+        return '';
+    }
   }
 
   render() {
-    const createActions = [
-      <TextField
-        floatingLabelText="Password"
-        type="text"
-        style={{'boxShadow': 'none'}}
-        value={this.state.docPass}
-        onChange={(e) => this.handleNewDocPassChange(e)}
-      />,
-      <FlatButton
-        label="Submit"
-        primary={true}
-        onTouchTap={() => this.handleNewDocSubmit()}
-      />,
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={() => this.setState({docCreateModal: false})}
-      />
-    ];
-    const shareActions = [
-      <TextField
-        floatingLabelText="Password"
-        type="text"
-        style={{'boxShadow': 'none'}}
-        value={this.state.docPass}
-        onChange={(e) => this.handleNewDocPassChange(e)}
-      />,
-      <FlatButton
-        label="Submit"
-        primary={true}
-        onTouchTap={() => this.handleSharedDocSubmit()}
-      />,
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={() => this.setState({docShareModal: false})}
-      />
-    ];
-    return(
-      <div className="docportal">
-        <Subheader inset={true}>My Documents</Subheader>
-        <div className = "docportal-main">
-          {this.state.myDocs.length !== 0 ?
-            <div className ='list-docs'>
-              <List className = "my-docs">
-                {this.state.myDocs.map( doc => {
-                  return (
-                    <div key={doc._id} className="listItem">
-                      <ListItem
-                      className="doc-item"
-                      leftAvatar={<Avatar icon={<ActionAssignment />} backgroundColor={colors.blue500} />}
-                      containerElement={<Link to={`/documents/${doc._id}`}></Link>}
-                      primaryText={doc.title}
-                    />
-                     <IconButton
-                       iconClassName="material-icons"
-                       iconStyle={{color: colors.blue500, display: 'in-line'}}
-                       onTouchTap={() => this.onDeleteClick(doc._id)}>delete_forever
-                     </IconButton>
-                  </div>
-                  );
-                })}
-              </List>
-            </div> : <div></div>
-          }
+    const styles = {
+      block: {
+        maxWidth: 250,
+      },
+      toggle: {
+        marginBottom: 16,
+      },
+      thumbOff: {
+        backgroundColor: '#ffcccc',
+      },
+      trackOff: {
+        backgroundColor: '#ff9d9d',
+      },
+      thumbSwitched: {
+        backgroundColor: 'red',
+      },
+      trackSwitched: {
+        backgroundColor: '#ff9d9d',
+      },
+      labelStyle: {
+        color: 'red',
+      },
+    };
 
-          <div className='doc-controls'>
-            <div className = "new-doc">
-              <TextField
-                floatingLabelText="New Document Title"
-                type="text"
-                style={{'boxShadow': 'none'}}
-                value={this.state.docID}
-                onChange={(event) => this.handleNewDocChange(event)}
-              />
-              <br></br>
-              <RaisedButton
-                label="Create Document"
-                onTouchTap={() => this.setState({docCreateModal: true})}
-              />
-            </div>
-            <div className = "shared-doc">
-              <TextField
-                floatingLabelText="paste a doc ID shared with you"
-                type="text"
-                style={{'boxShadow': 'none'}}
-                value={this.state.sharedDocID}
-                onChange={(event) => this.handleSharedDocChange(event)}
-              />
-              <br></br>
-              <RaisedButton
-                label="Search for Shared Doc"
-                onTouchTap={() => this.setState({docShareModal: true})}
-              />
-            </div>
-            <div className="logout">
-              <Link to='/'>
-                <FlatButton
-                  className="button"
-                  label="Log out"
-                  icon={<FontIcon className='material-icons'>account_circle</FontIcon>}
-                />
-              </Link>
-          </div>
-          <div className="modals">
-            <Dialog
-              title="Enter a password"
-              actions={createActions}
-              modal={true}
-              open={this.state.docCreateModal}
-            />
-          </div>
-          <div className="modals">
-            <Dialog
-              title="Enter the password for shared document"
-              actions={shareActions}
-              modal={true}
-              open={this.state.docShareModal}
-            />
+    const {finished, stepIndex} = this.state;
+    const contentStyle = {margin: '0 16px'};
+    const sellerIcon = <FontIcon className="material-icons">settings_input_antenna</FontIcon>;
+    const buyerIcon = <FontIcon className="material-icons">explore</FontIcon>;
+
+    return(
+      <div className="userview">
+        <RaisedButton
+          label="Open Drawer"
+          onTouchTap={() => this.handleToggle()}
+        />
+        <Drawer
+          docked={false}
+          width={200}
+          open={this.state.open}
+          onRequestChange={(open) => this.setState({open})}
+        >
+          <MenuItem onTouchTap={() => this.handleClose()}>Menu Item</MenuItem>
+          <MenuItem onTouchTap={() => this.handleClose()}>Menu Item 2</MenuItem>
+        </Drawer>
+        <Card className="card">
+          <CardMedia
+            className="icon"
+            mediaStyle={{width: "200px", height: "200px"}}
+          >
+            <img src='img/signal_logo.jpg' />
+          </CardMedia>
+          <CardTitle titleStyle={{textAlign: 'center'}} title="Sygnal" subtitle="The WiFi sharing App you wish you had"/>
+          <CardText>
+
+          </CardText>
+          <CardActions>
+
+          </CardActions>
+        </Card>
+        <div style={{width: '100%', maxWidth: 1000, margin: 'auto'}}>
+          <Stepper activeStep={stepIndex}>
+            <Step>
+              <StepLabel>Tap</StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>Draw</StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>Select time</StepLabel>
+            </Step>
+          </Stepper>
+          <div style={contentStyle}>
+            {finished ? (
+              <p>
+                <a
+                  href="#"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    this.setState({stepIndex: 0, finished: false});
+                  }}
+                >
+                  Click here
+                </a> to reset.
+              </p>
+            ) : (
+              <div>
+                <p>{this.getStepContent(stepIndex)}</p>
+                <div style={{marginTop: 12, marginBottom: 20}}>
+                  <FlatButton
+                    label="Back"
+                    disabled={stepIndex === 0}
+                    onTouchTap={() => this.handlePrev()}
+                    style={{marginRight: 12}}
+                  />
+                  <RaisedButton
+                    label={stepIndex === 2 ? 'Finish' : 'Next'}
+                    primary={true}
+                    onTouchTap={() => this.handleNext()}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
-        </div>
+        <Paper style={{width: '80%'}} zDepth={1}>
+          <BottomNavigation selectedIndex={this.state.selectedIndex}>
+            <BottomNavigationItem
+              label="As Seller"
+              icon={sellerIcon}
+              onTouchTap={() => this.select(0)}
+            />
+            <BottomNavigationItem
+              label="As Buyer"
+              icon={buyerIcon}
+              onTouchTap={() => this.select(1)}
+            />
+          </BottomNavigation>
+        </Paper>
       </div>
     );
   }
-
 }
+
+export default UserView;

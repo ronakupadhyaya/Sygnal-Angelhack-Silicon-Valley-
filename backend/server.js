@@ -46,14 +46,6 @@ app.use(session({ secret: 'frank_ocean' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.post('/login', passport.authenticate('local', { failureRedirect: '/failed' }),function(req, res) {
-  res.json({success: true});
-});
-
-app.get('/failed', function(req, res) {
-  res.json({success: false});
-});
-
 app.post('/register', function(req, res) {
   var newUser = new User({
     username: req.body.username,
@@ -68,6 +60,14 @@ app.post('/register', function(req, res) {
       res.json({success: true});
     }
   });
+});
+
+app.post('/login', passport.authenticate('local', { failureRedirect: '/failed' }),function(req, res) {
+  res.json({success: true});
+});
+
+app.get('/failed', function(req, res) {
+  res.json({success: false});
 });
 
 app.post('/newdoc', function(req, res) {
