@@ -4,10 +4,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const wifi = require('node-wifi');
 const axios = require('axios');
-var bodyParser = require('body-parser');
-var passport = require('passport');
-var LocalStrategy = require('passport-local');
-var session = require('express-session');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const session = require('express-session');
+const cors = require('cors')
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -38,7 +40,7 @@ wifi.scan(function(err, networks) {
     }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 //MongoDB connection
 var mongoose = require('mongoose');
@@ -88,7 +90,15 @@ app.use(passport.session());
 // app.get('/', auth(passport));
 
 app.post('/login', passport.authenticate('local', { failureRedirect: '/failed' }),function(req, res) {
-  res.json({success: true});
+  User.find({username: req.body.username}, function(err, users) {
+    users.forEach(function(user) {
+      if(user.password === req.body.password) {
+        res.json({success: true, user: user});
+        return
+      }
+    })
+    res.json({success: false});
+  })
 });
 
 app.get('/failed', function(req, res) {
@@ -108,7 +118,7 @@ app.post('/register', function(req, res) {
       return;
     } else {
       console.log(user);
-      res.json({success: true});
+      res.json({success: true, user: user});
       return;
     }
   });
@@ -150,6 +160,7 @@ app.get('/geolocation',(req, res)=> {
     res.send(geowifiArr)
   })
 });
+
 
 app.listen(PORT, error => {
     error

@@ -45,7 +45,7 @@ class Registration extends React.Component {
         console.log('supposed to redirect');
         self.props.history.push({
           pathname: '/userview',
-          // state: { name: res.data.username }
+          state: { name: data.user.username }
         });
       }
     })
@@ -57,7 +57,6 @@ class Registration extends React.Component {
   render() {
     return(
       <div className="loginContainer">
-        {/* {this.state.registerSuccess ? <Redirect to='/userview' /> : ''} */}
         <Card className="card">
           <CardMedia
             className="icon"
