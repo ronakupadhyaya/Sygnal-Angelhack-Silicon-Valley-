@@ -44,10 +44,6 @@ app.use(cors());
 
 app.use(express.static('./build'));
 
-app.get("/", function(req, res){
-  res.send("boop")
-})
-
 //MongoDB connection
 var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI, function(err) {
