@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "A Wifi-sharing App Fulfilling All Your Connective Needs",
   "scripts": {
-    "start": "npm run prodWebpack && npm run devServer",
+    "start": "npm run devServer",
+    "heroku-postbuild": "npm run prodWebpack",
     "devWebpack": "webpack-dev-server --content-base build/",
     "devServer": "nodemon --watch backend backend/server.js",
     "webpack": "webpack",
