@@ -69,6 +69,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
     if (err) {
       console.log(err);
       return done(err);
+
     }
     // if no user present, auth failed
     if (!user) {
