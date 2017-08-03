@@ -38,7 +38,10 @@ class Login extends React.Component {
       console.log('This log should contain the data', data);
       if(data.success) {
         console.log('The user should be taken to maps page');
-        self.props.history.push('/userview');
+        self.props.history.push({
+          pathname: '/userview',
+          state: { name: data.user.username }
+        });
       } else {
         self.setState({status: 'There was a problem with logging in!'});
       }

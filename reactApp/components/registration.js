@@ -17,7 +17,6 @@ class Registration extends React.Component {
       username: '',
       password: '',
       isSeller: false,
-      registerSuccess: false
     };
     this.handleUser = this.handleUser.bind(this);
     this.handlePass = this.handlePass.bind(this);
@@ -35,12 +34,20 @@ class Registration extends React.Component {
   handleSubmit() {
     var self = this;
     console.log("OUR STATE BABY", this.state);
+<<<<<<< HEAD
     axios.post('https://sygnalapp.herokuapp.com/register', {
+=======
+    axios.post('http://localhost:3000/register', {
+>>>>>>> 7afe3f43691c9a6a3c083f3b554a80d12f32e43a
       username: this.state.username,
       password: this.state.password,
       isSeller: this.state.isSeller
     })
     .then(function( {data} ) {
+<<<<<<< HEAD
+=======
+      console.log("RESPONSE is here", data);
+>>>>>>> 7afe3f43691c9a6a3c083f3b554a80d12f32e43a
       if(data.success) {
         console.log('supposed to redirect');
         self.props.history.push({
@@ -50,14 +57,13 @@ class Registration extends React.Component {
       }
     })
     .catch(function(err) {
-      console.log('There is a massive error :)', err);
+      console.log('There is a massive error :(', err);
     });
   }
 
   render() {
     return(
       <div className="loginContainer">
-        {/* {this.state.registerSuccess ? <Redirect to='/userview' /> : ''} */}
         <Card className="card">
           <CardMedia
             className="icon"
