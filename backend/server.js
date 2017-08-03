@@ -41,6 +41,7 @@ wifi.scan(function(err, networks) {
 });
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'build')));
 
 //MongoDB connection
 var mongoose = require('mongoose');
