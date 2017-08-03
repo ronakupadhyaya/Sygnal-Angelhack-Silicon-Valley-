@@ -55,7 +55,7 @@ class Login extends React.Component {
           >
             <img src='img/signal_logo.jpg' />
           </CardMedia>
-          <CardTitle titleStyle={{textAlign: 'center'}} title="Sygnal" subtitle="The WiFi sharing App you wish you had"/>
+          <CardTitle titleStyle={{textAlign: 'center'}} title="Sygnal" subtitle="For all your connective needs"/>
           <CardText>
             <p style={{color: 'red'}}>{this.state.status}</p>
             <TextField
