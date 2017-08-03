@@ -35,21 +35,17 @@ class Registration extends React.Component {
   handleSubmit() {
     var self = this;
     console.log("OUR STATE BABY", this.state);
-    axios.post('https://sygnalapp.mybluemix.net/api/UserObjs/replaceOrCreate', {
+    axios.post('https://sygnalapp.herokuapp.com/register', {
       username: this.state.username,
       password: this.state.password,
       isSeller: this.state.isSeller
     })
-    .then(function( res ) {
-      console.log("RESPONSE", res);
-      if(res.data) {
-        // this.setState({
-        //   registerSuccess: true
-        // })
+    .then(function( {data} ) {
+      if(data.success) {
         console.log('supposed to redirect');
         self.props.history.push({
           pathname: '/userview',
-          state: { name: res.data.username }
+          state: { name: data.user.username }
         });
       }
     })

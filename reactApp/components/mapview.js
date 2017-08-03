@@ -22,7 +22,7 @@ class MapView extends React.Component {
   }
   componentWillMount(){
     const self = this;
-    axios.get('http://localhost:3000/geolocation')
+    axios.get('https://sygnalapp.herokuapp.com/geolocation')
     .then(response => {
       self.setState({wifis:response.data})
     })
