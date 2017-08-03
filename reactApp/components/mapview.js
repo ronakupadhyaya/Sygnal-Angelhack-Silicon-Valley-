@@ -4,7 +4,7 @@ import {
   InfoWindow, Marker, GoogleApiWrapper
 } from 'google-maps-react';
 import ReactDOM from 'react-dom';
-import DrawArea from './DrawArea';
+import DrawArea from './drawarea';
 import axios from 'axios';
 
 class MapView extends React.Component {
