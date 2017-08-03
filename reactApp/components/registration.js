@@ -34,20 +34,12 @@ class Registration extends React.Component {
   handleSubmit() {
     var self = this;
     console.log("OUR STATE BABY", this.state);
-<<<<<<< HEAD
     axios.post('https://sygnalapp.herokuapp.com/register', {
-=======
-    axios.post('http://localhost:3000/register', {
->>>>>>> 7afe3f43691c9a6a3c083f3b554a80d12f32e43a
       username: this.state.username,
       password: this.state.password,
       isSeller: this.state.isSeller
     })
     .then(function( {data} ) {
-<<<<<<< HEAD
-=======
-      console.log("RESPONSE is here", data);
->>>>>>> 7afe3f43691c9a6a3c083f3b554a80d12f32e43a
       if(data.success) {
         console.log('supposed to redirect');
         self.props.history.push({
