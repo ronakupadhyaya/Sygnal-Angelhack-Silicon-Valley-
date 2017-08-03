@@ -17,11 +17,16 @@ wifi.scan(function(err, networks) {
         console.log(err);
     } else {
         wifisNearby = networks;
-        console.log(wifisNearby);
         for(var i = 0; i<wifisNearby.length-1; i++){
-          formatedWifis.push([wifisNearby[i].mac,wifisNearby[i+1].mac]);
-    }
-        console.log(formatedWifis);
+          formatedWifis.push({
+            mac:[
+             {macAddress:wifisNearby[i].mac},
+             {macAddress:wifisNearby[i+1].mac}],
+            ssid: wifisNearby[i].ssid,
+            frequency: wifisNearby[i].frequency,
+            signal_level:wifisNearby[i].signal_level
+          });
+        }
     }
 });
 
@@ -34,58 +39,39 @@ app.get('/', (request, response) => {
 app.get('/geolocation',(req, res)=> {
   var fn = function getGeo(obj) {
     return new Promise((resolve, reject) => {
-      resolve(axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDaWHUor2AZNZYVvbu1qaaEdCxFTi6Nv_Q',{
+      axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDaWHUor2AZNZYVvbu1qaaEdCxFTi6Nv_Q',{
         considerIp: "false",
-        wifiAccessPoints: [{macAddress:obj[0]},{macAddress:obj[1]}]
-      }));
-      reject("rejected");
-    })
-  }
-  function reflect(promise){
-    return promise.then(function(v){ return {v:v, status: "resolved" }},
-    function(e){ return {e:e, status: "rejected" }});
-  }
-
-
-    formatedWifis.map(item=>{
-      reflect(fn(item)).then(function(v){
-        console.log(v.status);
-        if(v.status==='resolved'){
-          console.log(v)
-          return v;
-        }
+        wifiAccessPoints: obj.mac
+      })
+      .then((resp)=>resolve(resp))
+      .catch(err => {
+        console.log(err);
+        resolve(err);
       })
     })
+  }
 
-  // .then(resp => res.send(resp))
-  // .catch(err => {if(err){console.log(err)}})
-
-  // console.log("locations is",locations);
-
-  // var locations = formatedWifis.map(fn);
-  // var geoLocations = Promise.all(locations);
-  // geoLocations
-  // .then(resp => res.send(resp))
-  // .catch(err => {
-  //   if(err) {
-  //     console.log('Error:', err)
-  //   }
-  // })
-
-  // axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDaWHUor2AZNZYVvbu1qaaEdCxFTi6Nv_Q',{
-  //   considerIp: false,
-  //   wifiAccessPoints: [
-  //     {macAddress:"0c:27:24:50:4a:88"},
-  //     {macAddress:"82:15:54:60:96:0e"}
-  //   ]
-  // })
-  // .then(response => {
-  //   console.log(response)
-  //   res.send(response.data)
-  // })
+  const locationsArr = formatedWifis.map(fn);
+  Promise.all(locationsArr)
+  .then(resp => {
+    let geowifiArr = [];
+    for(var i = 0; i<resp.length;i++){
+      if(resp[i].data){
+        const geowifi = Object.assign(
+          {},
+          resp[i].data,
+          {ssid:formatedWifis[i].ssid},
+          {frequency: wifisNearby[i].frequency},
+          {signal_level:wifisNearby[i].signal_level}
+        )
+        console.log(geowifi);
+        geowifiArr.push(geowifi);
+      }
+    }
+    res.send(geowifiArr)
+  })
 });
 
-// app.use('/api', api);
 
 app.listen(PORT, error => {
     error

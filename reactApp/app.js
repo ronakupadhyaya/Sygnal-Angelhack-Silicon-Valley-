@@ -9,5 +9,9 @@ injectTapEventPlugin();
 require('./css/main.css');
 
 render(
-  <MuiThemeProvider><BrowserRouter><Routes /></BrowserRouter></MuiThemeProvider>,
+  <MuiThemeProvider>
+    <BrowserRouter>
+      <Routes />
+    </BrowserRouter>
+  </MuiThemeProvider>,
    document.getElementById('root'));
