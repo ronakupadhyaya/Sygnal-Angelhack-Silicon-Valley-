@@ -52,6 +52,7 @@
     "express-session": "^1.15.4",
     "file-loader": "^1.0.0",
     "google-maps-react": "^1.1.0",
+    "got": "^7.1.0",
     "img-loader": "^2.0.0",
     "jquery": "^3.2.1",
     "loglevel": "^1.4.1",
