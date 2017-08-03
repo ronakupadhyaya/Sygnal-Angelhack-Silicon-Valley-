@@ -1,8 +1,7 @@
 {
-  "name": "electron-react-quick-start",
+  "name": "Sygnal",
   "version": "1.0.0",
-  "description": "A minimal Electron application with React and Express",
-  "main": "main.js",
+  "description": "A Wifi-sharing App Fulfilling All Your Connective Needs",
   "scripts": {
     "dev": "concurrently -k \"npm run devWebpack\" \"npm run devServer\"",
     "devWebpack": "webpack-dev-server --content-base build/",
@@ -46,6 +45,7 @@
     "jquery": "^3.2.1",
     "material-ui": "^0.18.7",
     "materialize-css": "^0.100.1",
+    "mongoose": "^4.11.5",
     "node-wifi": "^1.2.5",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",

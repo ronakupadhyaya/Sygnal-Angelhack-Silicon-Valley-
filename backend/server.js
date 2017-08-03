@@ -4,6 +4,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const wifi = require('node-wifi');
 const axios = require('axios');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var LocalStrategy = require('passport-local');
+var session = require('express-session');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 
 let wifisNearby = [];
 let formatedWifis = [];
@@ -17,75 +25,131 @@ wifi.scan(function(err, networks) {
         console.log(err);
     } else {
         wifisNearby = networks;
-        console.log(wifisNearby);
         for(var i = 0; i<wifisNearby.length-1; i++){
-          formatedWifis.push([wifisNearby[i].mac,wifisNearby[i+1].mac]);
-    }
-        console.log(formatedWifis);
+          formatedWifis.push({
+            mac:[
+             {macAddress:wifisNearby[i].mac},
+             {macAddress:wifisNearby[i+1].mac}],
+            ssid: wifisNearby[i].ssid,
+            frequency: wifisNearby[i].frequency,
+            signal_level:wifisNearby[i].signal_level
+          });
+        }
     }
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (request, response) => {
-  response.sendFile(__dirname + '/public/index.html'); // For React/Redux
+//MongoDB connection
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI, function(err) {
+  if(err) {
+    console.log('Error connecting to MongoDB', err);
+  } else {
+    console.log('Connected to MongoDB:)');
+  }
 });
+var { User } = require('./models.js');
+
+// PASSPORT FLOW
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+passport.use(new LocalStrategy(function(username, password, done) {
+  // Find the user with the given username
+  User.findOne({ username: username }, function (err, user) {
+    // if there's an error, finish trying to authenticate (auth failed)
+    if (err) {
+      console.log(err);
+      return done(err);
+    }
+    // if no user present, auth failed
+    if (!user) {
+      return done(null, false, { message: 'Incorrect username.' });
+    }
+    // if passwords do not match, auth failed
+    if (user.password !== password) {
+      return done(null, false, { message: 'Incorrect password.' });
+    }
+    // auth has has succeeded
+    return done(null, user);
+  });
+}));
+
+app.use(session({ secret: 'frank_ocean' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.get('/', auth(passport));
+
+app.post('/login', passport.authenticate('local', { failureRedirect: '/failed' }),function(req, res) {
+  res.json({success: true});
+});
+
+app.get('/failed', function(req, res) {
+  res.json({success: false});
+});
+
+app.post('/register', function(req, res) {
+  console.log("HERE'S SERVER SIDE REQ", req.body);
+  var newUser = new User({
+    username: req.body.username,
+    password: req.body.password,
+    isSeller: req.body.isSeller
+  });
+  newUser.save(function(err, user) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      console.log(user);
+      res.json({success: true});
+      return;
+    }
+  });
+});
+
 
 app.get('/geolocation',(req, res)=> {
   var fn = function getGeo(obj) {
     return new Promise((resolve, reject) => {
-      resolve(axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDaWHUor2AZNZYVvbu1qaaEdCxFTi6Nv_Q',{
+      axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDaWHUor2AZNZYVvbu1qaaEdCxFTi6Nv_Q',{
         considerIp: "false",
-        wifiAccessPoints: [{macAddress:obj[0]},{macAddress:obj[1]}]
-      }));
-      reject("rejected");
-    })
-  }
-  function reflect(promise){
-    return promise.then(function(v){ return {v:v, status: "resolved" }},
-    function(e){ return {e:e, status: "rejected" }});
-  }
-
-
-    formatedWifis.map(item=>{
-      reflect(fn(item)).then(function(v){
-        console.log(v.status);
-        if(v.status==='resolved'){
-          console.log(v)
-          return v;
-        }
+        wifiAccessPoints: obj.mac
+      })
+      .then((resp)=>resolve(resp))
+      .catch(err => {
+        console.log(err);
+        resolve(err);
       })
     })
+  }
 
-  // .then(resp => res.send(resp))
-  // .catch(err => {if(err){console.log(err)}})
-
-  // console.log("locations is",locations);
-
-  // var locations = formatedWifis.map(fn);
-  // var geoLocations = Promise.all(locations);
-  // geoLocations
-  // .then(resp => res.send(resp))
-  // .catch(err => {
-  //   if(err) {
-  //     console.log('Error:', err)
-  //   }
-  // })
-
-  // axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDaWHUor2AZNZYVvbu1qaaEdCxFTi6Nv_Q',{
-  //   considerIp: false,
-  //   wifiAccessPoints: [
-  //     {macAddress:"0c:27:24:50:4a:88"},
-  //     {macAddress:"82:15:54:60:96:0e"}
-  //   ]
-  // })
-  // .then(response => {
-  //   console.log(response)
-  //   res.send(response.data)
-  // })
+  const locationsArr = formatedWifis.map(fn);
+  Promise.all(locationsArr)
+  .then(resp => {
+    let geowifiArr = [];
+    for(var i = 0; i<resp.length;i++){
+      if(resp[i].data){
+        const geowifi = Object.assign(
+          {},
+          resp[i].data,
+          {ssid:formatedWifis[i].ssid},
+          {frequency: wifisNearby[i].frequency},
+          {signal_level:wifisNearby[i].signal_level}
+        )
+        console.log(geowifi);
+        geowifiArr.push(geowifi);
+      }
+    }
+    res.send(geowifiArr)
+  })
 });
-
-// app.use('/api', api);
 
 app.listen(PORT, error => {
     error

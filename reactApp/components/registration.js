@@ -17,7 +17,6 @@ class Registration extends React.Component {
       username: '',
       password: '',
       isSeller: false,
-      registerSuccess: false
     };
     this.handleUser = this.handleUser.bind(this);
     this.handlePass = this.handlePass.bind(this);
@@ -35,26 +34,23 @@ class Registration extends React.Component {
   handleSubmit() {
     var self = this;
     console.log("OUR STATE BABY", this.state);
-    axios.post('https://sygnalapp.mybluemix.net/api/UserObjs/replaceOrCreate', {
+    axios.post('http://localhost:3000/register', {
       username: this.state.username,
       password: this.state.password,
       isSeller: this.state.isSeller
     })
-    .then(function( res ) {
-      console.log("RESPONSE", res);
-      if(res.data) {
-        // this.setState({
-        //   registerSuccess: true
-        // })
+    .then(function( {data} ) {
+      console.log("RESPONSE is here", data);
+      if(data.success) {
         console.log('supposed to redirect');
         self.props.history.push({
           pathname: '/userview',
-          state: { name: res.data.username }
+          // state: { name: res.data.username }
         });
       }
     })
     .catch(function(err) {
-      console.log('There is a massive error :)', err);
+      console.log('There is a massive error :(', err);
     });
   }
 
