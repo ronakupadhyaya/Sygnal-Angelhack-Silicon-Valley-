@@ -1,7 +1,7 @@
 {
   "name": "Sygnal",
   "version": "1.0.0",
-  "description": "Wifi-sharing",
+  "description": "A Wifi-sharing App Fulfilling All Your Connective Needs",
   "scripts": {
     "start": "concurrently -k \"npm run devWebpack\" \"npm run devServer\"",
     "devWebpack": "webpack-dev-server --content-base build/",
