@@ -99,7 +99,7 @@ class UserView extends React.Component {
           onRequestChange={(open) => this.setState({open})}
         >
           <List>
-            <Subheader>{this.props.location.state.name}</Subheader>
+            {/* <Subheader>{this.props.location.state.name}</Subheader> */}
             <ListItem
               primaryText="Profile"
               leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>}

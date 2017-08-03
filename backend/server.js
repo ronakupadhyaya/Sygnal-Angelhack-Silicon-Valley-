@@ -4,6 +4,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const wifi = require('node-wifi');
 const axios = require('axios');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const session = require('express-session');
+const cors = require('cors')
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 
 let wifisNearby = [];
 let formatedWifis = [];
@@ -30,11 +40,91 @@ wifi.scan(function(err, networks) {
     }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
-app.get('/', (request, response) => {
-  response.sendFile(__dirname + '/public/index.html'); // For React/Redux
+//MongoDB connection
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI, function(err) {
+  if(err) {
+    console.log('Error connecting to MongoDB', err);
+  } else {
+    console.log('Connected to MongoDB:)');
+  }
 });
+var { User } = require('./models.js');
+
+// PASSPORT FLOW
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+passport.use(new LocalStrategy(function(username, password, done) {
+  // Find the user with the given username
+  User.findOne({ username: username }, function (err, user) {
+    // if there's an error, finish trying to authenticate (auth failed)
+    if (err) {
+      console.log(err);
+      return done(err);
+
+    }
+    // if no user present, auth failed
+    if (!user) {
+      return done(null, false, { message: 'Incorrect username.' });
+    }
+    // if passwords do not match, auth failed
+    if (user.password !== password) {
+      return done(null, false, { message: 'Incorrect password.' });
+    }
+    // auth has has succeeded
+    return done(null, user);
+  });
+}));
+
+app.use(session({ secret: 'frank_ocean' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.get('/', auth(passport));
+
+app.post('/login', passport.authenticate('local', { failureRedirect: '/failed' }),function(req, res) {
+  User.find({username: req.body.username}, function(err, users) {
+    users.forEach(function(user) {
+      if(user.password === req.body.password) {
+        res.json({success: true, user: user});
+        return
+      }
+    })
+    res.json({success: false});
+  })
+});
+
+app.get('/failed', function(req, res) {
+  res.json({success: false});
+});
+
+app.post('/register', function(req, res) {
+  console.log("HERE'S SERVER SIDE REQ", req.body);
+  var newUser = new User({
+    username: req.body.username,
+    password: req.body.password,
+    isSeller: req.body.isSeller
+  });
+  newUser.save(function(err, user) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      console.log(user);
+      res.json({success: true, user: user});
+      return;
+    }
+  });
+});
+
 
 app.get('/geolocation',(req, res)=> {
   var fn = function getGeo(obj) {

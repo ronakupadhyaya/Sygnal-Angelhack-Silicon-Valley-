@@ -87,7 +87,7 @@ class MapView extends React.Component {
                     signal_level={item.signal_level}
                     position={item.location}
                     icon={{
-                      url:'../../small_area_'+area+'_speed_'+signal+'.png',
+                      url:'img/small_area_'+area+'_speed_'+signal+'.png',
                       scaledSize: new google.maps.Size(40,40),
                       anchor: new google.maps.Point(32,32)
                     }}
