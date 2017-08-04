@@ -27,6 +27,7 @@ wifi.scan(function(err, networks) {
         console.log(err);
     } else {
         wifisNearby = networks;
+        // console.log('wifis I get from nearby area',networks);
         for(var i = 0; i<wifisNearby.length-1; i++){
           formatedWifis.push({
             mac:[
@@ -37,12 +38,13 @@ wifi.scan(function(err, networks) {
             signal_level:wifisNearby[i].signal_level
           });
         }
+        // console.log('formatedWifis',formatedWifis);
     }
 });
 
 app.use(cors());
-
 app.use(express.static('./build'));
+
 
 //MongoDB connection
 var mongoose = require('mongoose');
@@ -129,6 +131,7 @@ app.post('/register', function(req, res) {
 
 
 app.get('/geolocation',(req, res)=> {
+  console.log("Calling /geolocation!!!");
   var fn = function getGeo(obj) {
     return new Promise((resolve, reject) => {
       axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDaWHUor2AZNZYVvbu1qaaEdCxFTi6Nv_Q',{
@@ -149,14 +152,15 @@ app.get('/geolocation',(req, res)=> {
     let geowifiArr = [];
     for(var i = 0; i<resp.length;i++){
       if(resp[i].data){
+        console.log(resp[i].data.location);
         const geowifi = Object.assign(
           {},
-          resp[i].data,
+          {location: resp[i].data.location},
           {ssid:formatedWifis[i].ssid},
           {frequency: wifisNearby[i].frequency},
           {signal_level:wifisNearby[i].signal_level}
         )
-        console.log(geowifi);
+        console.log('geowifi is',geowifi);
         geowifiArr.push(geowifi);
       }
     }

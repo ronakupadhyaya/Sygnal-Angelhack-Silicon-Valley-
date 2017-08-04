@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Map,
-  InfoWindow, Marker, GoogleApiWrapper
-} from 'google-maps-react';
+import {Map,InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import ReactDOM from 'react-dom';
 import DrawArea from './drawarea';
 import axios from 'axios';
@@ -20,9 +17,16 @@ class MapView extends React.Component {
     this.onMarkerClick=this.onMarkerClick.bind(this);
     this.onMapClick=this.onMapClick.bind(this);
   }
+  showPosition(position) {
+    console.log('showing position');
+    console.log(position.coords);
+  }
   componentWillMount(){
     const self = this;
-    axios.get('https://sygnalapp.herokuapp.com/geolocation')
+    navigator.geolocation.getCurrentPosition(this.showPosition);
+    console.log('Calling MapView');
+    // axios.get('https://sygnalapp.herokuapp.com/geolocation')
+    axios.get('http://localhost:3000/geolocation')
     .then(response => {
       self.setState({wifis:response.data})
     })
@@ -60,7 +64,7 @@ class MapView extends React.Component {
       <div style={style}>
           <Map google={this.props.google}
             zoom={20}
-            initialCenter={this.state.wifis[0].location}
+            // initialCenter={this.state.wifis[0].location}
             onClick={this.onMapClicked}
             >
               {this.state.wifis.map(item=> {
@@ -83,7 +87,8 @@ class MapView extends React.Component {
                   area = 'small';
                 }
                 return(
-                  <Marker onClick={this.onMarkerClick} name={item.ssid}  frequency={item.frequency}
+                  <Marker key={item.ssid+item.frequency+item.signal_level}
+                    onClick={this.onMarkerClick} name={item.ssid}  frequency={item.frequency}
                     signal_level={item.signal_level}
                     position={item.location}
                     icon={{

@@ -48,7 +48,7 @@ class BuyerView extends React.Component {
 
   render() {
     const {tutorial, finished, stepIndex} = this.state;
-
+    console.log('rendering buyer view');
     return(
       <div className="buyerview">
         <div style={{width:"60%", height: "30%", margin: '30px'}}>

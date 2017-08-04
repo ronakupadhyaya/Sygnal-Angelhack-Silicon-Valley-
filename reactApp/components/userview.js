@@ -82,7 +82,7 @@ class UserView extends React.Component {
     const contentStyle = {margin: '0 16px'};
     const sellerIcon = <FontIcon className="material-icons">settings_input_antenna</FontIcon>;
     const buyerIcon = <FontIcon className="material-icons">explore</FontIcon>;
-
+    console.log('rendering userview');
     return(
       <div>
       <div className="userview">
