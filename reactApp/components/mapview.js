@@ -25,8 +25,8 @@ class MapView extends React.Component {
     const self = this;
     navigator.geolocation.getCurrentPosition(this.showPosition);
     console.log('Calling MapView');
-    // axios.get('https://sygnalapp.herokuapp.com/geolocation')
-    axios.get('http://localhost:3000/geolocation')
+    axios.get('https://sygnalapp.herokuapp.com/geolocation')
+    // axios.get('http://localhost:3000/geolocation')
     .then(response => {
       self.setState({wifis:response.data})
     })
