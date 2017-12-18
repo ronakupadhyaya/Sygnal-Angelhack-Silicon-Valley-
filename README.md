@@ -1,9 +1,9 @@
-# Sygnal - For all your connective needs
+# Sygnal 
 
-WiFi problems, we've all had them, and sometimes they come at the worst time like when you're looking for a coffee shop to finish up that essay or send that urgent email. With Sygnal, users can be connected to the internet practically anywhere for a small price. Moreover, users can also sell their unused data on their internet plan to other Sygnal users.
+# Overview
+Sygnal builds the sharing economy in telecommunications space by empowering everyone to become an Internet Service Provider. It allows users to sell their excess wifi data to others by letting them connect to their hotspots. Users selling their data set prices for usage time and data caps, and users in the vicinity can pay with Paypal or a credit card to connect. The web app uses Loopback.io to build complex integrations and utilizes IBM Bluemix and Google Maps Geolocation API.
 
 ## Built With
-
 * ReactJS
 * NodeJS
 * Loopback.io
@@ -11,20 +11,5 @@ WiFi problems, we've all had them, and sometimes they come at the worst time lik
 * Google Maps Geolocation API
 * Node-Wifi
 
+StrongLoop Blog Link: https://strongloop.com/strongblog/node-summit-angelhack-a-brisk-week-in-silicon-valley
 
-## Authors
-
-* **David Huang** [David's Github](https://github.com/nopawnintended)
-* **Koji Morishita** [Koji's Github](https://github.com/koji0412)
-* **Jatharsan Param** [Jatharsan's Github](https://github.com/jatparam)
-* **Chenhui Shen** [Chenhui's Github](https://github.com/shen-chenhui)
-* **Danhui Zhang** [Danhui's Github](https://github.com/danhuiZ)
-
-
-## License
-
-This project is licensed under the MIT License
-
-## Acknowledgments
-
-* Hat tip to Sai Vennam
